@@ -1,9 +1,11 @@
 # STM32_ILI9486_8_bit
 This is a library for ILI9486 based TFT displays controlled by an 8-bit parallel port (8080) interface for STM32duino.
 
+![TFT Display](helloworld.jpg)
+
 Based on the original [Adafruit 8-bit parallel TFT library](https://github.com/adafruit/TFTLCD-Library) written by Limor Fried/Ladyada and ported to STM32duino by Mike Kushnerik/MKE.
 
-This library depends on the ST HAL based core files from here: [STM32duino](
+This library depends on the ST HAL based Arduino core files from here: [STM32duino](
 https://github.com/stm32duino/Arduino_Core_STM32)
 
 The goal of this library was to create a simple to use display interface for the 3.5" and 4.0" ILI9486 TFT displays which is also compatible with the [Adafruit GFX API.](https://github.com/adafruit/Adafruit-GFX-Library)
