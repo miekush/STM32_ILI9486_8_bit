@@ -1,5 +1,5 @@
 # STM32_ILI9486_8_bit
-This is a library for ILI9486 based TFT displays controlled by an 8-bit parallel port (8080) interface for STM32duino.
+This is a library for ILI9486 based TFT displays controlled by an 8-bit parallel port (8080) interface for STM32F103 using STM32duino.
 
 ![TFT Display](helloworld.jpg)
 
