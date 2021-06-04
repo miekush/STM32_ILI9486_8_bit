@@ -153,18 +153,36 @@ extern uint8_t read8_(void);
 
 #define read8(x) ( x = read8_() )
 
-// set control pins (PB5-PB9) to output mode and enable apb2 clock for gpiob
-#define setCntrlDir() { RCC->APB2ENR |= 0b1000; TFT_CNTRL_PORT->CRH = 0x00000033; TFT_CNTRL_PORT->CRL = 0x33300000; }
+#if defined(STM32F1) //STM32F1 based boards
+	// set control pins (PB5-PB9) to output mode and enable apb2 clock for gpiob
+	#define setCntrlDir() { RCC->APB2ENR |= 0b1000; TFT_CNTRL_PORT->CRH = 0x00000033; TFT_CNTRL_PORT->CRL = 0x33300000; }
 
-// set the data pins (PA0-PA7) to input mode and enable apb2 clock for gpioa
-#define setReadDir() { RCC->APB2ENR |= 0b0100; TFT_DATA_PORT->CRL = 0x88888888; }
+	// set the data pins (PA0-PA7) to input mode and enable apb2 clock for gpioa
+	#define setReadDir() { RCC->APB2ENR |= 0b0100; TFT_DATA_PORT->CRL = 0x88888888; }
 
-// set the data pins (PA0-PA7) to output mode and enable apb2 clock for gpioa
-#define setWriteDir() { RCC->APB2ENR |= 0b0100; TFT_DATA_PORT->CRL = 0x33333333; }
+	// set the data pins (PA0-PA7) to output mode and enable apb2 clock for gpioa
+	#define setWriteDir() { RCC->APB2ENR |= 0b0100; TFT_DATA_PORT->CRL = 0x33333333; }
 
-// set pins to output the 8 bit value
-#define write8(c) { TFT_DATA_PORT->BSRR = (uint32_t)(0x00FF0000 + ((c)&0xFF)); WR_STROBE; }
+	// set pins to output the 8 bit value
+	#define write8(c) { TFT_DATA_PORT->BSRR = (uint32_t)(0x00FF0000 + ((c)&0xFF)); WR_STROBE; }
+	
+#elif defined(STM32F3) //STM32F3 based boards
+	// set control pins (PB11-PB15) to output mode and enable ahb clock for gpiob
+	#define setCntrlDir() { RCC->AHBENR |= (0b0100 << 16); TFT_CNTRL_PORT->OSPEEDR = 0xFFC00000; TFT_CNTRL_PORT->MODER = 0x55400000; }
 
+	// set the data pins (PA8-PA15) to input mode and enable ahb clock for gpioa
+	#define setReadDir() { RCC->AHBENR |= (0b0010 << 16); TFT_DATA_PORT->MODER = 0x00000000; }
+
+	// set the data pins (PA8-PA15) to output mode and enable ahb clock for gpioa
+	#define setWriteDir() { RCC->AHBENR |= (0b0010 << 16); TFT_DATA_PORT->OSPEEDR = 0xFFFF0000; TFT_DATA_PORT->MODER = 0x55550000; }
+
+	// set pins to output the 8 bit value
+	#define write8(c) { TFT_DATA_PORT->BSRR = (uint32_t)(0xFF000000 + (((c)&0xFF) << 8)); WR_STROBE; }
+	
+#else
+	#error "STM32YYxx chip series is not compatible with this library!"
+
+#endif
 /*****************************************************************************/
 
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
